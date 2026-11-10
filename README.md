@@ -12,7 +12,14 @@ Jalali (Persian) calendar, date picker and Persian theme for Redmine 6/7.
 
 ## Install
 
-Upload both files, then run the installer as root:
+The package `redmine_persian_calendar.tar.gz` is included in this repository.
+If you changed the sources, rebuild it first:
+
+```bash
+./build.sh
+```
+
+Upload the tarball and the installer, then run the installer as root:
 
 ```bash
 scp redmine_persian_calendar.tar.gz install.sh root@YOUR_SERVER:/tmp/

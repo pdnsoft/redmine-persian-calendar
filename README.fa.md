@@ -12,7 +12,14 @@
 
 ## نصب
 
-هر دو فایل را آپلود کنید، سپس نصب‌کننده را با کاربر root اجرا کنید:
+بسته `redmine_persian_calendar.tar.gz` در همین مخزن موجود است. اگر سورس‌ها را
+تغییر دادید، اول آن را دوباره بسازید:
+
+```bash
+./build.sh
+```
+
+سپس بسته و نصب‌کننده را آپلود و نصب‌کننده را با کاربر root اجرا کنید:
 
 ```bash
 scp redmine_persian_calendar.tar.gz install.sh root@YOUR_SERVER:/tmp/
