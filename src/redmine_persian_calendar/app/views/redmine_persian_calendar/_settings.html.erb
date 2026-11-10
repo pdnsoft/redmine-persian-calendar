@@ -1,0 +1,13 @@
+<fieldset>
+  <legend>تنظیمات تقویم فارسی</legend>
+  <p>
+    <label>فعال‌سازی تقویم فارسی</label>
+    <%= hidden_field_tag 'settings[enabled]', '0', id: '' %>
+    <%= check_box_tag 'settings[enabled]', '1', Setting.plugin_redmine_persian_calendar['enabled'] == '1' %>
+  </p>
+  <p>
+    <label>فعال‌سازی کش تبدیل تاریخ</label>
+    <%= hidden_field_tag 'settings[cache_enabled]', '0', id: '' %>
+    <%= check_box_tag 'settings[cache_enabled]', '1', Setting.plugin_redmine_persian_calendar['cache_enabled'] == '1' %>
+  </p>
+</fieldset>

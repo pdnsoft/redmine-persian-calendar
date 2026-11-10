@@ -1,0 +1,12 @@
+/*
+ * PDNSoft Persian theme for Redmine 7.
+ *
+ * Selectable in Administration > Settings > Display > Theme. Everything here
+ * loads only while this theme is selected, so the default theme stays stock.
+ * Single sources kept in the plugin: custom_styles/custom_overrides.css and
+ * app/assets/stylesheets/vazirmatn_fonts.css.
+ */
+
+@import url(/application.css);
+@import url(/plugin_assets/redmine_persian_calendar/custom_overrides.css);
+@import url(/plugin_assets/redmine_persian_calendar/vazirmatn_fonts.css);

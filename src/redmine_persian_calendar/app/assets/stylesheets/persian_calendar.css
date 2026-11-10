@@ -1,0 +1,466 @@
+// Persian Calendar Styles for Redmine
+// Provides styling for Persian datepicker and calendar components
+
+// ============================================
+// PRESERVE REDMINE TABLE STYLES
+// These ensure our Jalali styles don't break Redmine's table appearance
+// ============================================
+table.list,
+table.list td,
+table.list th,
+.list table,
+.autoscroll table {
+  border-collapse: collapse !important;
+}
+
+table.list td,
+table.list th,
+.list table td,
+.list table th {
+  border: 1px solid #e4e4e4 !important;
+  padding: 4px 8px !important;
+  text-align: left !important;
+  vertical-align: middle !important;
+}
+
+table.list tr:hover td,
+table.list tr:hover th,
+.list table tr:hover td,
+.list table tr:hover th {
+  background-color: #ffffdd !important;
+}
+
+// ============================================
+// Persian Datepicker Styles
+// ============================================
+.persian-datepicker {
+  position: relative;
+  display: inline-block;
+
+  input {
+    direction: ltr;
+    text-align: left;
+
+    &.rtl {
+      direction: rtl;
+      text-align: right;
+    }
+  }
+
+  &.datepicker-open {
+    z-index: 1000;
+  }
+}
+
+// Persian Calendar Navigation
+.persian-month-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+
+  .prev-month,
+  .next-month {
+    flex: 0 0 auto;
+
+    a {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      color: #007bff;
+      text-decoration: none;
+      border-radius: 0.25rem;
+      transition: background-color 0.15s ease-in-out;
+
+      &:hover {
+        background-color: #e9ecef;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .current-month {
+    flex: 1 1 auto;
+    text-align: center;
+    font-weight: 600;
+  }
+}
+
+// Persian Calendar Header
+.persian-calendar-header {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #495057;
+
+  .month-name {
+    color: #007bff;
+  }
+
+  .year {
+    color: #6c757d;
+  }
+}
+
+// Persian Date Field Styling
+.persian-date-field {
+  position: relative;
+
+  .persian-input {
+    padding-right: 2.5rem;
+  }
+
+  .calendar-icon {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    pointer-events: none;
+  }
+}
+
+// RTL Support for Persian Interface
+.persian-interface {
+  direction: rtl;
+  text-align: right;
+
+  .persian-datepicker input {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .persian-month-navigation {
+    .prev-month {
+      order: 3;
+    }
+
+    .current-month {
+      order: 2;
+    }
+
+    .next-month {
+      order: 1;
+    }
+  }
+}
+
+// Persian Datepicker Widget Styles
+.pwt-datepicker-view-container {
+  font-family: "Tahoma", "Arial", sans-serif;
+  direction: rtl;
+  text-align: right;
+
+  // Override default positioning for better integration
+  &.pwt-datepicker-view-container-responsive {
+    max-width: 320px;
+  }
+
+  // Header styling
+  .pwt-datepicker-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 0.25rem 0.25rem 0 0;
+
+    .pwt-datepicker-title {
+      font-weight: 600;
+    }
+  }
+
+  // Navigation buttons
+  .pwt-datepicker-navigator {
+    .pwt-datepicker-navigator-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      color: white;
+      border-radius: 0.25rem;
+      transition: background-color 0.15s ease-in-out;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+
+  // Calendar grid
+  .pwt-datepicker-calendar {
+    .pwt-datepicker-calendar-weekdays {
+      background-color: #f8f9fa;
+
+      .pwt-datepicker-calendar-weekday {
+        color: #495057;
+        font-weight: 600;
+        font-size: 0.875rem;
+      }
+    }
+
+    .pwt-datepicker-calendar-days {
+      .pwt-datepicker-calendar-day {
+        transition: all 0.15s ease-in-out;
+        border-radius: 0.25rem;
+
+        &:hover {
+          background-color: #e9ecef;
+        }
+
+        &.pwt-datepicker-calendar-day-selected {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+        }
+
+        &.pwt-datepicker-calendar-day-today {
+          background-color: #ffc107;
+          color: #212529;
+          font-weight: 600;
+        }
+
+        &.pwt-datepicker-calendar-day-other-month {
+          color: #adb5bd;
+        }
+
+        &.pwt-datepicker-calendar-day-disabled {
+          color: #dee2e6;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  // Toolbox styling
+  .pwt-datepicker-toolbox {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 0.5rem;
+
+    .pwt-datepicker-toolbox-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.375rem 0.75rem;
+      margin: 0 0.25rem;
+      font-size: 0.875rem;
+      transition: background-color 0.15s ease-in-out;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+
+      &.pwt-datepicker-toolbox-today-button {
+        background-color: #28a745;
+
+        &:hover {
+          background-color: #1e7e34;
+        }
+      }
+
+      &.pwt-datepicker-toolbox-calendar-switch {
+        background-color: #6c757d;
+
+        &:hover {
+          background-color: #545b62;
+        }
+      }
+    }
+  }
+
+  // Time picker styling
+  .pwt-datepicker-timepicker {
+    border-top: 1px solid #dee2e6;
+    background-color: #ffffff;
+    padding: 1rem;
+
+    .pwt-datepicker-timepicker-unit {
+      margin: 0 0.5rem;
+
+      .pwt-datepicker-timepicker-unit-input {
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        padding: 0.375rem 0.75rem;
+        text-align: center;
+        width: 3rem;
+
+        &:focus {
+          border-color: #80bdff;
+          outline: 0;
+          box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+      }
+
+      .pwt-datepicker-timepicker-unit-button {
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        color: #495057;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        margin: 0.125rem;
+        transition: background-color 0.15s ease-in-out;
+
+        &:hover {
+          background-color: #e9ecef;
+        }
+      }
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .persian-month-navigation {
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .prev-month,
+    .next-month,
+    .current-month {
+      flex: none;
+      text-align: center;
+    }
+  }
+
+  .pwt-datepicker-view-container {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+// Dark Mode Support
+@media (prefers-color-scheme: dark) {
+  .persian-month-navigation {
+    background-color: #343a40;
+    border-color: #495057;
+    color: #f8f9fa;
+
+    .prev-month a,
+    .next-month a {
+      color: #80bdff;
+
+      &:hover {
+        background-color: #495057;
+      }
+    }
+  }
+
+  .persian-calendar-header {
+    color: #f8f9fa;
+
+    .month-name {
+      color: #80bdff;
+    }
+
+    .year {
+      color: #adb5bd;
+    }
+  }
+
+  .pwt-datepicker-view-container {
+    .pwt-datepicker-calendar {
+      .pwt-datepicker-calendar-weekdays {
+        background-color: #495057;
+
+        .pwt-datepicker-calendar-weekday {
+          color: #f8f9fa;
+        }
+      }
+
+      .pwt-datepicker-calendar-days {
+        .pwt-datepicker-calendar-day {
+          &:hover {
+            background-color: #495057;
+          }
+
+          &.pwt-datepicker-calendar-day-other-month {
+            color: #6c757d;
+          }
+        }
+      }
+    }
+
+    .pwt-datepicker-toolbox {
+      background-color: #495057;
+      border-color: #6c757d;
+    }
+
+    .pwt-datepicker-timepicker {
+      background-color: #343a40;
+      border-color: #495057;
+
+      .pwt-datepicker-timepicker-unit {
+        .pwt-datepicker-timepicker-unit-input {
+          background-color: #495057;
+          border-color: #6c757d;
+          color: #f8f9fa;
+
+          &:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(128, 189, 255, 0.25);
+          }
+        }
+
+        .pwt-datepicker-timepicker-unit-button {
+          background-color: #6c757d;
+          border-color: #adb5bd;
+          color: #f8f9fa;
+
+          &:hover {
+            background-color: #5a6268;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Print Styles
+@media print {
+  .persian-datepicker,
+  .pwt-datepicker-view-container {
+    display: none !important;
+  }
+
+  .persian-date-field input {
+    border: none !important;
+    background: transparent !important;
+  }
+}
+
+// Accessibility Improvements
+.persian-datepicker {
+  input:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+  }
+}
+
+.pwt-datepicker-view-container {
+  .pwt-datepicker-calendar-day {
+    &:focus {
+      outline: 2px solid #007bff;
+      outline-offset: -2px;
+    }
+  }
+
+  .pwt-datepicker-toolbox-button:focus,
+  .pwt-datepicker-timepicker-unit-button:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+  }
+}
+
+// Animation for smooth transitions
+.persian-datepicker {
+  .pwt-datepicker-view-container {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+
+    &.pwt-datepicker-view-container-show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
