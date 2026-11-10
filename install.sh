@@ -42,6 +42,28 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 NC='\033[0m'
 
+usage() {
+    echo -e "${BOLD}Usage:${NC} install.sh [command]"
+    echo ""
+    echo -e "${BOLD}Commands:${NC}"
+    echo "  (none)          interactive menu"
+    echo "  install         install everything (plugin + picker + theme + language)"
+    echo "  install-plugin  install plugin only (picker; theme and language untouched)"
+    echo "  uninstall       remove plugin, assets and theme"
+    echo "  status          show plugin, theme and Apache status"
+    echo "  help, -h, --help  show this help"
+    echo ""
+    echo -e "${BOLD}Environment variables:${NC}"
+    echo "  REDMINE_DIR     Redmine root directory (default: auto-detect)"
+    echo "  PLUGIN_ARCHIVE  path to redmine_persian_calendar.tar.gz (default: auto-detect)"
+    echo ""
+    echo -e "${BOLD}Examples:${NC}"
+    echo "  ./install.sh"
+    echo "  ./install.sh install"
+    echo "  REDMINE_DIR=/var/www/redmine ./install.sh install-plugin"
+    echo "  PLUGIN_ARCHIVE=/tmp/redmine_persian_calendar.tar.gz ./install.sh install"
+}
+
 show_banner() {
     clear
     echo -e "${CYAN}${BOLD}"
@@ -570,5 +592,7 @@ case "${1:-}" in
     install-plugin) show_banner; check_root; check_redmine; do_install minimal ;;
     uninstall)      show_banner; check_root; check_redmine; do_uninstall ;;
     status)         show_banner; check_redmine; do_status ;;
-    *)              main_menu ;;
+    help|-h|--help) usage ;;
+    "")             main_menu ;;
+    *)              echo -e "${RED}Unknown command: $1${NC}"; echo ""; usage; exit 1 ;;
 esac

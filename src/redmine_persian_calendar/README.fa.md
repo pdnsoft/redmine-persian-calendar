@@ -12,8 +12,9 @@
 
 ## نصب
 
-بسته `redmine_persian_calendar.tar.gz` در همین مخزن موجود است. اگر سورس‌ها را
-تغییر دادید، اول آن را دوباره بسازید:
+بسته `redmine_persian_calendar.tar.gz` را از صفحه
+[Releases](https://github.com/pdnsoft/redmine-persian-calendar/releases) دانلود کنید.
+اگر سورس‌ها را تغییر دادید، اول آن را دوباره بسازید:
 
 ```bash
 ./build.sh
@@ -52,24 +53,23 @@ chmod +x /tmp/install.sh
 4. وضعیت
 5. خروج
 
-اجرای غیرتعاملی (`install.sh install`) پاسخ‌های پیشنهادی را اعمال می‌کند: هر سه فعال.
-
-اجرای غیرتعاملی:
+دستورهای غیرتعاملی:
 
 ```bash
-/tmp/install.sh install
-```
-
-فقط افزونه (بدون پوسته و بدون تغییر زبان):
-
-```bash
-/tmp/install.sh install-plugin
-```
-
-حذف:
-
-```bash
+/tmp/install.sh install          # نصب کامل با پاسخ‌های پیشنهادی
+/tmp/install.sh install-plugin   # فقط افزونه، بدون تغییر پوسته و زبان
 /tmp/install.sh uninstall
+/tmp/install.sh status
+/tmp/install.sh --help           # نمایش گزینه‌ها و متغیرهای محیطی
+```
+
+متغیرهای محیطی:
+
+- `REDMINE_DIR` — مسیر ریشه ردماین (پیش‌فرض: تشخیص خودکار)
+- `PLUGIN_ARCHIVE` — مسیر فایل بسته (پیش‌فرض: تشخیص خودکار)
+
+```bash
+REDMINE_DIR=/var/www/redmine ./install.sh install
 ```
 
 ## بعد از نصب
