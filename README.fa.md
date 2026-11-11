@@ -28,13 +28,14 @@
 |---|---|
 | ![زمان صرف‌شده](docs/screenshots/07-time-entries.png) | ![گزارش زمان](docs/screenshots/08-time-report.png) |
 
-| تقویم شمسی | تنظیمات افزونه |
+| تنظیمات افزونه | تنظیمات نمایش: پوسته PDN Persian و زبان فارسی |
 |---|---|
-| ![تقویم](docs/screenshots/09-calendar.png) | ![تنظیمات افزونه](docs/screenshots/10-plugin-settings.png) |
+| ![تنظیمات افزونه](docs/screenshots/10-plugin-settings.png) | ![تنظیمات پوسته](docs/screenshots/11-theme-settings.png) |
 
-| تنظیمات نمایش: پوسته PDN Persian و زبان فارسی |
-|---|
-| ![تنظیمات پوسته](docs/screenshots/11-theme-settings.png) |
+> **توجه:** تصاویر بالا صفحاتی هستند که افزونه فعلاً پوشش می‌دهد.
+> صفحه **تقویم** ردماین و چند بخش کم‌کاربرد دیگر (مثلاً گانت و برخی صفحات
+> مدیریتی) هنوز تاریخ میلادی نشان می‌دهند و در حال حاضر توسط این افزونه
+> پوشش داده نمی‌شوند.
 
 ## نصب
 

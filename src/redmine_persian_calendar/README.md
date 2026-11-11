@@ -28,13 +28,14 @@ Jalali (Persian) calendar, date picker and Persian theme for Redmine 6/7.
 |---|---|
 | ![Time entries](docs/screenshots/07-time-entries.png) | ![Time report](docs/screenshots/08-time-report.png) |
 
-| Jalali calendar | Plugin settings |
+| Plugin settings | Display settings: PDN Persian theme and Persian language |
 |---|---|
-| ![Calendar](docs/screenshots/09-calendar.png) | ![Plugin settings](docs/screenshots/10-plugin-settings.png) |
+| ![Plugin settings](docs/screenshots/10-plugin-settings.png) | ![Theme settings](docs/screenshots/11-theme-settings.png) |
 
-| Display settings: PDN Persian theme and Persian language |
-|---|
-| ![Theme settings](docs/screenshots/11-theme-settings.png) |
+> **Coverage note:** the screenshots above are the pages the plugin covers today.
+> Redmine's **Calendar** view and a few other less-used sections (for example
+> Gantt and some admin screens) still show Gregorian dates and are not covered
+> by the plugin so far.
 
 ## Install
 
