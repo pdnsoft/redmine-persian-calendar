@@ -10,6 +10,32 @@
 - Ruby (ردماین 7 به 3.2 یا بالاتر نیاز دارد)
 - دسترسی SSH با کاربر root به سرور
 
+## تصاویر
+
+| داشبورد فارسی | نمای کلی پروژه |
+|---|---|
+| ![داشبورد](docs/screenshots/01-dashboard.png) | ![نمای کلی پروژه](docs/screenshots/02-project-overview.png) |
+
+| فهرست پیامدها با تاریخ شمسی | جزئیات پیامد |
+|---|---|
+| ![فهرست پیامدها](docs/screenshots/03-issue-list.png) | ![جزئیات پیامد](docs/screenshots/04-issue-detail.png) |
+
+| انتخاب‌گر تاریخ در فرم پیامد جدید | انتخاب‌گر تاریخ هنگام ثبت زمان |
+|---|---|
+| ![انتخاب‌گر تاریخ پیامد جدید](docs/screenshots/05-new-issue-jalali-picker.png) | ![انتخاب‌گر تاریخ ثبت زمان](docs/screenshots/06-log-time-jalali-picker.png) |
+
+| فهرست زمان صرف‌شده | گزارش زمان با فیلتر تاریخ شمسی |
+|---|---|
+| ![زمان صرف‌شده](docs/screenshots/07-time-entries.png) | ![گزارش زمان](docs/screenshots/08-time-report.png) |
+
+| تقویم شمسی | تنظیمات افزونه |
+|---|---|
+| ![تقویم](docs/screenshots/09-calendar.png) | ![تنظیمات افزونه](docs/screenshots/10-plugin-settings.png) |
+
+| تنظیمات نمایش: پوسته PDN Persian و زبان فارسی |
+|---|
+| ![تنظیمات پوسته](docs/screenshots/11-theme-settings.png) |
+
 ## نصب
 
 بسته `redmine_persian_calendar.tar.gz` را از صفحه

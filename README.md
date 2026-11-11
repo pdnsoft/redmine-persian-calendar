@@ -10,6 +10,32 @@ Jalali (Persian) calendar, date picker and Persian theme for Redmine 6/7.
 - Ruby (Redmine 7 needs 3.2+)
 - Root SSH access to the server
 
+## Screenshots
+
+| Persian dashboard | Project overview |
+|---|---|
+| ![Dashboard](docs/screenshots/01-dashboard.png) | ![Project overview](docs/screenshots/02-project-overview.png) |
+
+| Issue list with Jalali dates | Issue detail |
+|---|---|
+| ![Issue list](docs/screenshots/03-issue-list.png) | ![Issue detail](docs/screenshots/04-issue-detail.png) |
+
+| Jalali picker on new issue | Jalali picker when logging time |
+|---|---|
+| ![New issue picker](docs/screenshots/05-new-issue-jalali-picker.png) | ![Log time picker](docs/screenshots/06-log-time-jalali-picker.png) |
+
+| Spent time list | Time report with Jalali date filter |
+|---|---|
+| ![Time entries](docs/screenshots/07-time-entries.png) | ![Time report](docs/screenshots/08-time-report.png) |
+
+| Jalali calendar | Plugin settings |
+|---|---|
+| ![Calendar](docs/screenshots/09-calendar.png) | ![Plugin settings](docs/screenshots/10-plugin-settings.png) |
+
+| Display settings: PDN Persian theme and Persian language |
+|---|
+| ![Theme settings](docs/screenshots/11-theme-settings.png) |
+
 ## Install
 
 Download `redmine_persian_calendar.tar.gz` from the
