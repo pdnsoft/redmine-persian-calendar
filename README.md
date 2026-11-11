@@ -37,6 +37,12 @@ Jalali (Persian) calendar, date picker and Persian theme for Redmine 6/7.
 > Gantt and some admin screens) still show Gregorian dates and are not covered
 > by the plugin so far.
 
+## TODO
+
+- Jalali dates in the **Calendar** view
+- Jalali dates in the **Gantt** chart
+- Jalali dates in the remaining less-used screens (admin lists, activity feed)
+
 ## Install
 
 Download `redmine_persian_calendar.tar.gz` from the
