@@ -29,6 +29,9 @@ PLUGIN_DIR="$REDMINE_DIR/plugins/$PLUGIN_NAME"
 ASSETS_DIR="$REDMINE_DIR/public/plugin_assets/$PLUGIN_NAME"
 THEME_NAME="persian"
 THEME_DIR="$REDMINE_DIR/themes/$THEME_NAME"
+# Theme-owned static assets, kept apart from the plugin so either feature can
+# be installed/removed without touching the other.
+THEME_ASSETS_DIR="$REDMINE_DIR/public/plugin_assets/persian_theme"
 # Redmine 7 compiles CSS through Propshaft; the plugin ships its overrides as
 # static files under public/plugin_assets, so nothing is written into core.
 PLUGIN_ARCHIVE="${PLUGIN_ARCHIVE:-}"
@@ -46,11 +49,14 @@ usage() {
     echo -e "${BOLD}Usage:${NC} install.sh [command]"
     echo ""
     echo -e "${BOLD}Commands:${NC}"
-    echo "  (none)          interactive menu"
-    echo "  install         install everything (plugin + picker + theme + language)"
-    echo "  install-plugin  install plugin only (picker; theme and language untouched)"
-    echo "  uninstall       remove plugin, assets and theme"
-    echo "  status          show plugin, theme and Apache status"
+    echo "  (none)            interactive menu"
+    echo "  install           install plugin and theme"
+    echo "  install-plugin    install plugin only (calendar, picker, fa locale)"
+    echo "  install-theme     install theme only (PDN Persian)"
+    echo "  uninstall         remove plugin and theme"
+    echo "  uninstall-plugin  remove plugin only, keep theme"
+    echo "  uninstall-theme   remove theme only, keep plugin"
+    echo "  status            show plugin, theme and Apache status"
     echo "  help, -h, --help  show this help"
     echo ""
     echo -e "${BOLD}Environment variables:${NC}"
@@ -78,11 +84,14 @@ show_banner() {
 show_menu() {
     echo -e "  ${BOLD}Choose an option:${NC}"
     echo ""
-    echo -e "    ${CYAN}1)${NC} Install everything (plugin + picker + theme + language)"
-    echo -e "    ${CYAN}2)${NC} Install plugin only (picker, no theme/language changes)"
-    echo -e "    ${CYAN}3)${NC} Uninstall Persian Calendar"
-    echo -e "    ${CYAN}4)${NC} Check Status"
-    echo -e "    ${CYAN}5)${NC} Exit"
+    echo -e "    ${CYAN}1)${NC} Install everything (plugin + theme)"
+    echo -e "    ${CYAN}2)${NC} Install plugin only"
+    echo -e "    ${CYAN}3)${NC} Install theme only"
+    echo -e "    ${CYAN}4)${NC} Uninstall everything"
+    echo -e "    ${CYAN}5)${NC} Uninstall plugin only"
+    echo -e "    ${CYAN}6)${NC} Uninstall theme only"
+    echo -e "    ${CYAN}7)${NC} Check status"
+    echo -e "    ${CYAN}8)${NC} Exit"
     echo ""
 }
 
@@ -338,11 +347,19 @@ verify_deployed_styles() {
 }
 
 deploy_theme() {
-    local source_theme="$PLUGIN_DIR/themes/$THEME_NAME"
+    local source_plugin="${1:-$PLUGIN_DIR}"
+    local source_theme="$source_plugin/themes/$THEME_NAME"
+    local font_css="$source_plugin/app/assets/stylesheets/vazirmatn_fonts.css"
+    local fonts_dir="$source_plugin/app/assets/fonts"
+    local theme_css="$source_plugin/custom_styles/custom_overrides.css"
 
     if [ ! -f "$source_theme/stylesheets/application.css" ]; then
-        echo -e "${RED}[ERROR] Plugin package is missing the Persian theme${NC}"
+        echo -e "${RED}[ERROR] Package is missing the Persian theme${NC}"
         echo -e "${YELLOW}Checked: $source_theme/stylesheets/application.css${NC}"
+        return 1
+    fi
+    if [ ! -f "$theme_css" ] || [ ! -f "$font_css" ] || [ ! -d "$fonts_dir" ]; then
+        echo -e "${RED}[ERROR] Package is missing the theme stylesheet, font CSS or fonts${NC}"
         return 1
     fi
 
@@ -350,20 +367,42 @@ deploy_theme() {
     rm -rf "$THEME_DIR/stylesheets" "$THEME_DIR/javascripts"
     mkdir -p "$THEME_DIR"
     cp -a "$source_theme/." "$THEME_DIR/"
-    chown -R www-data:www-data "$THEME_DIR"
-    chmod -R 755 "$THEME_DIR"
-    find "$THEME_DIR" -type f -name '*.css' -exec chmod 644 {} +
+
+    mkdir -p "$THEME_ASSETS_DIR/fonts"
+    cp "$theme_css" "$THEME_ASSETS_DIR/custom_overrides.css"
+    # Theme assets live under their own URL, so rewrite the font paths
+    sed 's#/plugin_assets/redmine_persian_calendar/#/plugin_assets/persian_theme/#g' \
+        "$font_css" > "$THEME_ASSETS_DIR/vazirmatn_fonts.css"
+    cp "$fonts_dir/"*.woff2 "$THEME_ASSETS_DIR/fonts/"
+
+    chown -R www-data:www-data "$THEME_DIR" "$THEME_ASSETS_DIR"
+    chmod -R 755 "$THEME_DIR" "$THEME_ASSETS_DIR"
+    find "$THEME_DIR" "$THEME_ASSETS_DIR" -type f -name '*.css' -exec chmod 644 {} +
 
     echo -e "${GREEN}[OK] Theme '${THEME_NAME}' installed in $THEME_DIR${NC}"
+    echo -e "${GREEN}[OK] Theme assets installed in $THEME_ASSETS_DIR${NC}"
     echo -e "  Select it in Administration > Settings > Display > Theme"
 }
 
 verify_theme() {
+    local font_count
+
     if [ ! -f "$THEME_DIR/stylesheets/application.css" ] ||
-       ! grep -q "custom_overrides.css" "$THEME_DIR/stylesheets/application.css" ||
-       ! grep -q "vazirmatn_fonts.css" "$THEME_DIR/stylesheets/application.css" ||
-       [ ! -f "$THEME_DIR/javascripts/theme.js" ]; then
-        echo -e "${RED}[ERROR] Persian theme is missing or does not import the styles${NC}"
+       ! grep -q "/plugin_assets/persian_theme/custom_overrides.css" "$THEME_DIR/stylesheets/application.css" ||
+       ! grep -q "/plugin_assets/persian_theme/vazirmatn_fonts.css" "$THEME_DIR/stylesheets/application.css" ||
+       [ ! -f "$THEME_DIR/javascripts/theme.js" ] ||
+       [ ! -f "$THEME_ASSETS_DIR/custom_overrides.css" ] ||
+       [ ! -f "$THEME_ASSETS_DIR/vazirmatn_fonts.css" ]; then
+        echo -e "${RED}[ERROR] Persian theme is missing or its assets are incomplete${NC}"
+        return 1
+    fi
+    font_count="$(find "$THEME_ASSETS_DIR/fonts" -maxdepth 1 -name '*.woff2' 2>/dev/null | wc -l)"
+    if [ "$font_count" -lt 5 ]; then
+        echo -e "${RED}[ERROR] Persian theme fonts are missing ($font_count found)${NC}"
+        return 1
+    fi
+    if grep -q "/plugin_assets/redmine_persian_calendar/fonts" "$THEME_ASSETS_DIR/vazirmatn_fonts.css"; then
+        echo -e "${RED}[ERROR] Theme font CSS still points at plugin assets${NC}"
         return 1
     fi
     echo -e "${GREEN}[OK] Persian theme available in Administration > Settings > Display${NC}"
@@ -409,9 +448,9 @@ ask_yes_no() {
     esac
 }
 
-configure_defaults() {
+configure_plugin_defaults() {
     echo ""
-    echo -e "${BLUE}Default settings:${NC}"
+    echo -e "${BLUE}Plugin settings:${NC}"
 
     if ask_yes_no "Enable the Jalali date picker and Persian calendar?" y; then
         set_picker_enabled 1
@@ -421,19 +460,29 @@ configure_defaults() {
         echo -e "${YELLOW}[INFO] Jalali picker disabled; enable it later in Administration > Plugins${NC}"
     fi
 
-    if ask_yes_no "Make 'PDN Persian' the default theme?" y; then
-        set_theme "$THEME_NAME"
-        echo -e "${GREEN}[OK] Theme enabled: PDN Persian${NC}"
-    else
-        echo -e "${YELLOW}[INFO] Theme not selected; you can pick it in Administration > Settings > Display${NC}"
-    fi
-
     if ask_yes_no "Set Persian (fa) as the default language for all users?" y; then
         set_default_language fa
         echo -e "${GREEN}[OK] Persian set as default for all users${NC}"
     else
         echo -e "${YELLOW}[INFO] Default language unchanged${NC}"
     fi
+}
+
+configure_theme_default() {
+    echo ""
+    echo -e "${BLUE}Theme settings:${NC}"
+
+    if ask_yes_no "Make 'PDN Persian' the default theme?" y; then
+        set_theme "$THEME_NAME"
+        echo -e "${GREEN}[OK] Theme enabled: PDN Persian${NC}"
+    else
+        echo -e "${YELLOW}[INFO] Theme not selected; you can pick it in Administration > Settings > Display${NC}"
+    fi
+}
+
+configure_defaults() {
+    configure_plugin_defaults
+    configure_theme_default
 }
 
 deactivate_theme() {
@@ -520,7 +569,10 @@ do_install() {
     verify_deployed_styles || return 1
     if [ "$full_install" = "full" ]; then
         verify_theme || return 1
-        configure_defaults
+        configure_plugin_defaults
+        configure_theme_default
+    else
+        configure_plugin_defaults
     fi
 
     restart_redmine
@@ -533,16 +585,95 @@ do_install() {
     echo ""
 }
 
-do_uninstall() {
+do_install_theme() {
+    local tar_path temp_dir source_plugin
+
+    echo -e "${BLUE}=== Installing PDN Persian theme ===${NC}"
+    echo ""
+
+    tar_path="$(find_plugin_tar)"
+    if [ -z "$tar_path" ]; then
+        echo -e "${YELLOW}Enter path to $PLUGIN_NAME.tar.gz:${NC}"
+        read -rp "> " tar_path
+    fi
+    if [ ! -f "$tar_path" ]; then
+        echo -e "${RED}File not found: $tar_path${NC}"
+        return 1
+    fi
+    echo -e "${GREEN}[OK] Found: $tar_path${NC}"
+
+    temp_dir="$(mktemp -d)"
+    if ! tar xzf "$tar_path" -C "$temp_dir" --warning=no-timestamp 2>/dev/null; then
+        tar xzf "$tar_path" -C "$temp_dir" || { rm -rf "$temp_dir"; return 1; }
+    fi
+    source_plugin="$temp_dir/$PLUGIN_NAME"
+    if [ ! -d "$source_plugin/themes/$THEME_NAME" ]; then
+        echo -e "${RED}[ERROR] Package does not contain the Persian theme${NC}"
+        rm -rf "$temp_dir"
+        return 1
+    fi
+
+    deploy_theme "$source_plugin" || { rm -rf "$temp_dir"; return 1; }
+    rm -rf "$temp_dir"
+
+    cd "$REDMINE_DIR"
+    echo -e "${BLUE}Recompiling assets...${NC}"
+    RAILS_ENV=production bundle exec rails assets:precompile 2>&1 | tail -3 || return 1
+    echo -e "${GREEN}[OK] Assets recompiled${NC}"
+
+    verify_theme || return 1
+    configure_theme_default
+
+    restart_redmine
+    echo -e "${GREEN}[OK] Apache restarted${NC}"
+
+    echo ""
+    echo -e "${GREEN}${BOLD}Theme installation complete!${NC}"
+    echo -e "  Select it in Administration > Settings > Display > Theme"
+    echo ""
+}
+
+do_uninstall_plugin() {
     echo -e "${RED}This will remove the Persian Calendar plugin.${NC}"
-    echo -e "${YELLOW}fa.yml and stylesheets will be kept.${NC}"
+    echo -e "${YELLOW}The theme and the fa locale stay untouched.${NC}"
+    read -rp "Continue? (y/n): " c
+    [ "$c" != "y" ] && [ "$c" != "Y" ] && echo "Cancelled." && return
+
+    cd "$REDMINE_DIR"
+    RAILS_ENV=production bundle exec rake redmine:plugins:migrate NAME=$PLUGIN_NAME 2>&1 | tail -3 || return 1
+    rm -rf "$PLUGIN_DIR" "$ASSETS_DIR"
+    echo -e "${GREEN}Plugin removed${NC}"
+
+    restart_redmine
+    echo -e "${GREEN}Plugin uninstall complete!${NC}"
+    echo ""
+}
+
+do_uninstall_theme() {
+    echo -e "${RED}This will remove the PDN Persian theme.${NC}"
+    echo -e "${YELLOW}The plugin stays installed.${NC}"
+    read -rp "Continue? (y/n): " c
+    [ "$c" != "y" ] && [ "$c" != "Y" ] && echo "Cancelled." && return
+
+    deactivate_theme
+    rm -rf "$THEME_DIR" "$THEME_ASSETS_DIR"
+    echo -e "${GREEN}Theme removed${NC}"
+
+    restart_redmine
+    echo -e "${GREEN}Theme uninstall complete!${NC}"
+    echo ""
+}
+
+do_uninstall() {
+    echo -e "${RED}This will remove the Persian Calendar plugin and theme.${NC}"
+    echo -e "${YELLOW}fa.yml and database data will be kept.${NC}"
     read -rp "Continue? (y/n): " c
     [ "$c" != "y" ] && [ "$c" != "Y" ] && echo "Cancelled." && return
 
     deactivate_theme
     cd "$REDMINE_DIR"
     RAILS_ENV=production bundle exec rake redmine:plugins:migrate NAME=$PLUGIN_NAME 2>&1 | tail -3 || return 1
-    rm -rf "$PLUGIN_DIR" "$ASSETS_DIR" "$THEME_DIR"
+    rm -rf "$PLUGIN_DIR" "$ASSETS_DIR" "$THEME_DIR" "$THEME_ASSETS_DIR"
     echo -e "${GREEN}Plugin and Persian theme removed${NC}"
 
     restart_redmine
@@ -551,20 +682,22 @@ do_uninstall() {
 }
 
 do_status() {
-    local http_status
+    local http_status current_theme
 
     echo -e "${BOLD}Plugin Status:${NC}"
     [ -d "$PLUGIN_DIR" ] && echo -e "  Plugin:  ${GREEN}Installed${NC}" || echo -e "  Plugin:  ${RED}Not found${NC}"
     [ -d "$ASSETS_DIR" ] && echo -e "  Assets:  ${GREEN}Present${NC}" || echo -e "  Assets:  ${YELLOW}Missing${NC}"
     [ -f "$PLUGIN_DIR/config/locales/fa.yml" ] && echo -e "  fa.yml:  ${GREEN}Present${NC}" || echo -e "  fa.yml:  ${RED}Missing${NC}"
-    if [ -f "$THEME_DIR/stylesheets/application.css" ]; then
-        local current_theme
+
+    echo -e "${BOLD}Theme Status:${NC}"
+    if [ -f "$THEME_DIR/stylesheets/application.css" ] && [ -d "$THEME_ASSETS_DIR/fonts" ]; then
         current_theme="$(active_theme)"
         [ -z "$current_theme" ] && current_theme="default"
         echo -e "  Theme:   ${GREEN}PDN Persian installed${NC} (active: $current_theme)"
     else
         echo -e "  Theme:   ${RED}Not found${NC}"
     fi
+
     http_status="$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1/" 2>/dev/null || true)"
     [ -n "$http_status" ] || http_status="000"
     [ "$http_status" = "200" ] && echo -e "  Apache:  ${GREEN}Running${NC}" || echo -e "  Apache:  ${RED}HTTP $http_status${NC}"
@@ -575,24 +708,30 @@ main_menu() {
     while true; do
         show_banner
         show_menu
-        read -rp "  Enter choice [1-5]: " choice
+        read -rp "  Enter choice [1-8]: " choice
         case $choice in
             1) check_root; check_redmine; do_install full; read -rp "Press Enter..." ;;
             2) check_root; check_redmine; do_install minimal; read -rp "Press Enter..." ;;
-            3) check_root; check_redmine; do_uninstall; read -rp "Press Enter..." ;;
-            4) check_redmine; do_status; read -rp "Press Enter..." ;;
-            5) echo -e "${GREEN}Goodbye!${NC}"; exit 0 ;;
+            3) check_root; check_redmine; do_install_theme; read -rp "Press Enter..." ;;
+            4) check_root; check_redmine; do_uninstall; read -rp "Press Enter..." ;;
+            5) check_root; check_redmine; do_uninstall_plugin; read -rp "Press Enter..." ;;
+            6) check_root; check_redmine; do_uninstall_theme; read -rp "Press Enter..." ;;
+            7) check_redmine; do_status; read -rp "Press Enter..." ;;
+            8) echo -e "${GREEN}Goodbye!${NC}"; exit 0 ;;
             *) echo -e "${RED}Invalid choice${NC}"; sleep 1 ;;
         esac
     done
 }
 
 case "${1:-}" in
-    install)        show_banner; check_root; check_redmine; do_install full ;;
-    install-plugin) show_banner; check_root; check_redmine; do_install minimal ;;
-    uninstall)      show_banner; check_root; check_redmine; do_uninstall ;;
-    status)         show_banner; check_redmine; do_status ;;
-    help|-h|--help) usage ;;
-    "")             main_menu ;;
-    *)              echo -e "${RED}Unknown command: $1${NC}"; echo ""; usage; exit 1 ;;
+    install)          show_banner; check_root; check_redmine; do_install full ;;
+    install-plugin)   show_banner; check_root; check_redmine; do_install minimal ;;
+    install-theme)    show_banner; check_root; check_redmine; do_install_theme ;;
+    uninstall)        show_banner; check_root; check_redmine; do_uninstall ;;
+    uninstall-plugin) show_banner; check_root; check_redmine; do_uninstall_plugin ;;
+    uninstall-theme)  show_banner; check_root; check_redmine; do_uninstall_theme ;;
+    status)           show_banner; check_redmine; do_status ;;
+    help|-h|--help)   usage ;;
+    "")               main_menu ;;
+    *)                echo -e "${RED}Unknown command: $1${NC}"; echo ""; usage; exit 1 ;;
 esac

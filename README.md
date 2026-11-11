@@ -32,35 +32,46 @@ chmod +x /tmp/install.sh
 /tmp/install.sh
 ```
 
-Choose **1) Install everything**. The installer finds Redmine automatically
-(`/opt/redmine`, `/var/www/redmine`, …; override with `REDMINE_DIR=/path`) and:
+Choose **1) Install everything**, or install the two features separately.
+The plugin (Jalali calendar, date picker, `fa` locale) and the **PDN Persian**
+theme are fully independent: either can be installed, restored or removed
+without touching the other. The installer finds Redmine automatically
+(`/opt/redmine`, `/var/www/redmine`, …; override with `REDMINE_DIR=/path`).
 
-1. extracts the plugin to `plugins/redmine_persian_calendar`
-2. validates files and styles
-3. deploys the stylesheets, fonts and the **PDN Persian** theme (`themes/persian`)
-4. runs migrations and recompiles assets
-5. asks three questions and applies your answers:
+Installing everything:
+
+1. installs the plugin into `plugins/redmine_persian_calendar`
+2. installs the theme into `themes/persian`, with its stylesheets and fonts
+   under `public/plugin_assets/persian_theme`
+3. runs migrations and recompiles assets
+4. asks and applies:
    - enable the Jalali date picker and Persian calendar?
-   - make **PDN Persian** the default theme?
    - set Persian (`fa`) as the default language for all users?
-6. restarts Apache
+   - make **PDN Persian** the default theme?
+5. restarts Apache
 
 Menu options:
 
-1. install everything (plugin + picker + theme + language)
-2. install plugin only (picker; theme and language untouched)
-3. uninstall
-4. status
-5. exit
+1. install everything (plugin + theme)
+2. install plugin only
+3. install theme only
+4. uninstall everything
+5. uninstall plugin only (theme stays)
+6. uninstall theme only (plugin stays)
+7. check status
+8. exit
 
 Non-interactive commands:
 
 ```bash
-/tmp/install.sh install          # everything; recommended answers
-/tmp/install.sh install-plugin   # plugin only, no theme/language change
-/tmp/install.sh uninstall
+/tmp/install.sh install            # plugin + theme; recommended answers
+/tmp/install.sh install-plugin     # plugin only
+/tmp/install.sh install-theme      # theme only
+/tmp/install.sh uninstall          # remove both
+/tmp/install.sh uninstall-plugin   # remove plugin, keep theme
+/tmp/install.sh uninstall-theme    # remove theme, keep plugin
 /tmp/install.sh status
-/tmp/install.sh --help           # options and environment variables
+/tmp/install.sh --help             # options and environment variables
 ```
 
 Environment variables:
@@ -85,9 +96,16 @@ REDMINE_DIR=/var/www/redmine ./install.sh install
 
 ## Uninstall
 
-Choose **2) Uninstall Persian Calendar** (or `/tmp/install.sh uninstall`).
-It switches the theme back to default, removes the plugin, assets and theme.
-The `fa` locale and your database data are untouched.
+Uninstall both, or one feature at a time:
+
+```bash
+/tmp/install.sh uninstall          # plugin + theme
+/tmp/install.sh uninstall-plugin   # plugin only; theme keeps working
+/tmp/install.sh uninstall-theme    # theme only; plugin keeps working
+```
+
+Removing the theme switches Redmine back to the default theme. The `fa` locale
+and your database data are untouched.
 
 ## Status
 
@@ -95,7 +113,8 @@ The `fa` locale and your database data are untouched.
 /tmp/install.sh status
 ```
 
-Shows plugin, assets, theme (installed + active) and Apache status.
+Shows the plugin and the theme (installed, plus the active theme) separately,
+along with Apache status.
 
 ## Manual install
 
@@ -106,9 +125,16 @@ chown -R www-data:www-data redmine_persian_calendar
 cd ..
 RAILS_ENV=production bundle exec rake redmine:plugins:migrate
 cp -a plugins/redmine_persian_calendar/themes/persian themes/
-cp -a plugins/redmine_persian_calendar/custom_styles/. public/plugin_assets/redmine_persian_calendar/
-cp -a plugins/redmine_persian_calendar/app/assets/{fonts,javascripts,stylesheets}/. public/plugin_assets/redmine_persian_calendar/
-chown -R www-data:www-data public/plugin_assets/redmine_persian_calendar themes/persian
+mkdir -p public/plugin_assets/persian_theme/fonts
+cp plugins/redmine_persian_calendar/custom_styles/custom_overrides.css public/plugin_assets/persian_theme/
+sed 's#/plugin_assets/redmine_persian_calendar/#/plugin_assets/persian_theme/#g' \
+  plugins/redmine_persian_calendar/app/assets/stylesheets/vazirmatn_fonts.css \
+  > public/plugin_assets/persian_theme/vazirmatn_fonts.css
+cp plugins/redmine_persian_calendar/app/assets/fonts/*.woff2 public/plugin_assets/persian_theme/fonts/
+mkdir -p public/plugin_assets/redmine_persian_calendar
+cp -a plugins/redmine_persian_calendar/app/assets/{javascripts,stylesheets}/. public/plugin_assets/redmine_persian_calendar/
+chown -R www-data:www-data public/plugin_assets/persian_theme \
+  public/plugin_assets/redmine_persian_calendar themes/persian
 RAILS_ENV=production bundle exec rails assets:precompile
 systemctl restart apache2
 ```

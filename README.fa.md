@@ -32,35 +32,46 @@ chmod +x /tmp/install.sh
 /tmp/install.sh
 ```
 
-گزینه **1) نصب کامل** را انتخاب کنید. نصب‌کننده ردماین را خودکار پیدا می‌کند
-(`/opt/redmine`، `/var/www/redmine` و …؛ با `REDMINE_DIR=/path` می‌توانید مسیر را دستی بدهید) و:
+گزینه **1) نصب کامل** را انتخاب کنید، یا دو بخش را جدا نصب کنید.
+افزونه (تقویم جلالی، انتخاب‌گر تاریخ، زبان `fa`) و پوسته **PDN Persian**
+کاملاً مستقل‌اند: هر کدام را می‌توان بدون دست زدن به دیگری نصب، بازگردانی
+یا حذف کرد. نصب‌کننده ردماین را خودکار پیدا می‌کند
+(`/opt/redmine`، `/var/www/redmine` و …؛ با `REDMINE_DIR=/path` می‌توانید مسیر را دستی بدهید).
 
-1. افزونه را در `plugins/redmine_persian_calendar` استخراج می‌کند
-2. فایل‌ها و استایل‌ها را بررسی می‌کند
-3. استایل‌ها، فونت‌ها و پوسته **PDN Persian** (`themes/persian`) را نصب می‌کند
-4. مایگریشن‌ها را اجرا و دارایی‌ها (assets) را دوباره کامپایل می‌کند
-5. سه سؤال می‌پرسد و پاسخ‌ها را اعمال می‌کند:
+نصب کامل:
+
+1. افزونه را در `plugins/redmine_persian_calendar` نصب می‌کند
+2. پوسته را در `themes/persian` و استایل‌ها و فونت‌های آن را در
+   `public/plugin_assets/persian_theme` نصب می‌کند
+3. مایگریشن‌ها را اجرا و دارایی‌ها (assets) را دوباره کامپایل می‌کند
+4. می‌پرسد و اعمال می‌کند:
    - انتخاب‌گر تاریخ شمسی و تقویم جلالی فعال شود؟
-   - پوسته پیش‌فرض روی **PDN Persian** تنظیم شود؟
    - زبان پیش‌فرض برای همه کاربران فارسی (`fa`) شود؟
-6. Apache را ری‌استارت می‌کند
+   - پوسته پیش‌فرض روی **PDN Persian** تنظیم شود؟
+5. Apache را ری‌استارت می‌کند
 
 گزینه‌های منو:
 
-1. نصب کامل (افزونه + انتخاب‌گر + پوسته + زبان)
-2. فقط نصب افزونه (انتخاب‌گر؛ پوسته و زبان تغییر نمی‌کنند)
-3. حذف
-4. وضعیت
-5. خروج
+1. نصب کامل (افزونه + پوسته)
+2. فقط نصب افزونه
+3. فقط نصب پوسته
+4. حذف کامل
+5. فقط حذف افزونه (پوسته می‌ماند)
+6. فقط حذف پوسته (افزونه می‌ماند)
+7. وضعیت
+8. خروج
 
 دستورهای غیرتعاملی:
 
 ```bash
-/tmp/install.sh install          # نصب کامل با پاسخ‌های پیشنهادی
-/tmp/install.sh install-plugin   # فقط افزونه، بدون تغییر پوسته و زبان
-/tmp/install.sh uninstall
+/tmp/install.sh install            # افزونه + پوسته با پاسخ‌های پیشنهادی
+/tmp/install.sh install-plugin     # فقط افزونه
+/tmp/install.sh install-theme      # فقط پوسته
+/tmp/install.sh uninstall          # حذف هر دو
+/tmp/install.sh uninstall-plugin   # حذف افزونه، پوسته می‌ماند
+/tmp/install.sh uninstall-theme    # حذف پوسته، افزونه می‌ماند
 /tmp/install.sh status
-/tmp/install.sh --help           # نمایش گزینه‌ها و متغیرهای محیطی
+/tmp/install.sh --help             # نمایش گزینه‌ها و متغیرهای محیطی
 ```
 
 متغیرهای محیطی:
@@ -86,9 +97,16 @@ REDMINE_DIR=/var/www/redmine ./install.sh install
 
 ## حذف
 
-گزینه **3) حذف تقویم شمسی** را انتخاب کنید (یا `/tmp/install.sh uninstall`).
-پوسته به حالت پیش‌فرض برمی‌گردد و افزونه، دارایی‌ها و پوسته حذف می‌شوند.
-فایل زبان `fa` و داده‌های دیتابیس شما دست‌نخورده می‌مانند.
+حذف هر دو، یا یکی از بخش‌ها:
+
+```bash
+/tmp/install.sh uninstall          # افزونه + پوسته
+/tmp/install.sh uninstall-plugin   # فقط افزونه؛ پوسته کار می‌کند
+/tmp/install.sh uninstall-theme    # فقط پوسته؛ افزونه کار می‌کند
+```
+
+با حذف پوسته، ردماین به پوسته پیش‌فرض برمی‌گردد. فایل زبان `fa` و داده‌های
+دیتابیس شما دست‌نخورده می‌مانند.
 
 ## وضعیت
 
@@ -96,7 +114,7 @@ REDMINE_DIR=/var/www/redmine ./install.sh install
 /tmp/install.sh status
 ```
 
-افزونه، دارایی‌ها، پوسته (نصب‌شده + فعال) و وضعیت Apache را نشان می‌دهد.
+افزونه و پوسته را جداگانه (نصب‌شده و پوسته فعال) و وضعیت Apache را نشان می‌دهد.
 
 ## نصب دستی
 
@@ -106,10 +124,21 @@ tar xzf /tmp/redmine_persian_calendar.tar.gz
 chown -R www-data:www-data redmine_persian_calendar
 cd ..
 RAILS_ENV=production bundle exec rake redmine:plugins:migrate
+# پوسته: فایل‌های پوسته به‌همراه دارایی‌های ثابت خودش (مستقل از افزونه)
 cp -a plugins/redmine_persian_calendar/themes/persian themes/
-cp -a plugins/redmine_persian_calendar/custom_styles/. public/plugin_assets/redmine_persian_calendar/
-cp -a plugins/redmine_persian_calendar/app/assets/{fonts,javascripts,stylesheets}/. public/plugin_assets/redmine_persian_calendar/
-chown -R www-data:www-data public/plugin_assets/redmine_persian_calendar themes/persian
+mkdir -p public/plugin_assets/persian_theme/fonts
+cp plugins/redmine_persian_calendar/custom_styles/custom_overrides.css public/plugin_assets/persian_theme/
+sed 's#/plugin_assets/redmine_persian_calendar/#/plugin_assets/persian_theme/#g' \
+  plugins/redmine_persian_calendar/app/assets/stylesheets/vazirmatn_fonts.css \
+  > public/plugin_assets/persian_theme/vazirmatn_fonts.css
+cp plugins/redmine_persian_calendar/app/assets/fonts/*.woff2 public/plugin_assets/persian_theme/fonts/
+
+# افزونه: فقط دارایی‌های انتخاب‌گر تاریخ
+mkdir -p public/plugin_assets/redmine_persian_calendar
+cp -a plugins/redmine_persian_calendar/app/assets/{javascripts,stylesheets}/. public/plugin_assets/redmine_persian_calendar/
+
+chown -R www-data:www-data public/plugin_assets/persian_theme \
+  public/plugin_assets/redmine_persian_calendar themes/persian
 RAILS_ENV=production bundle exec rails assets:precompile
 systemctl restart apache2
 ```
