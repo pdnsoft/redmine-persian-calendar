@@ -20,11 +20,12 @@ The authors and contributors are not responsible for any data loss, downtime, or
 
 | Redmine Version | Status |
 |----------------|--------|
+| 7.0.1 | ✅ Tested and working |
 | 6.1.3 (stable) | ✅ Tested and working |
 | Older versions | ⚠️ May or may not work |
 | Newer versions | ⚠️ May or may not work |
 
-This plugin has been tested and confirmed working on **Redmine 6.1.3 stable**. Compatibility with older or newer versions of Redmine is not guaranteed. Always verify compatibility with your specific Redmine version before deploying.
+This plugin has been tested and confirmed working on **Redmine 7.0.1** and **Redmine 6.1.3 stable**. Compatibility with older or newer versions of Redmine is not guaranteed. Always verify compatibility with your specific Redmine version before deploying.
 
 ---
 
@@ -50,12 +51,13 @@ This plugin has been tested and confirmed working on **Redmine 6.1.3 stable**. C
 
 | نسخه ردماین | وضعیت |
 |------------|-------|
+| ۷.۰.۱ | ✅ تست شده و کار می‌کند |
 | ۶.۱.۳ (پایدار) | ✅ تست شده و کار می‌کند |
 | نسخه‌های قدیمی‌تر | ⚠️ ممکن است کار کند یا نکند |
 | نسخه‌های جدیدتر | ⚠️ ممکن است کار کند یا نکند |
 
-این افزونه بر روی **ردماین ۶.۱.۳ نسخه پایدار** تست شده و با موفقیت کار می‌کند. سازگاری با نسخه‌های قدیمی‌تر یا جدیدتر تضمین نمی‌شود. قبل از استقرار، حتماً سازگاری با نسخه ردماین خود را بررسی کنید.
+این افزونه بر روی **ردماین ۷.۰.۱** و **ردماین ۶.۱.۳ نسخه پایدار** تست شده و با موفقیت کار می‌کند. سازگاری با نسخه‌های قدیمی‌تر یا جدیدتر تضمین نمی‌شود. قبل از استقرار، حتماً سازگاری با نسخه ردماین خود را بررسی کنید.
 
 ---
 
-*آخرین به‌روزرسانی: ۲۰۲۶-۰۸-۲۳*
+*آخرین به‌روزرسانی: ۲۰۲۶-۱۱-۱۱*
