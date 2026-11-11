@@ -8,5 +8,13 @@
  */
 
 @import url(/application.css);
-@import url(/plugin_assets/redmine_persian_calendar/custom_overrides.css);
+@import url("/plugin_assets/redmine_persian_calendar/custom_overrides.css?v=2");
 @import url(/plugin_assets/redmine_persian_calendar/vazirmatn_fonts.css);
+
+/* Code blocks stay LTR even in RTL pages */
+pre,
+pre code {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: isolate;
+}

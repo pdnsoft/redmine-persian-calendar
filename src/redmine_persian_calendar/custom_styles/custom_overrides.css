@@ -107,3 +107,11 @@ html[dir="rtl"] div.issue .avatar {
   float: left;
   margin: 0 12px 6px 0;
 }
+
+/***** Code blocks are always LTR *****/
+pre,
+pre code {
+  direction: ltr !important;
+  text-align: left !important;
+  unicode-bidi: isolate;
+}
