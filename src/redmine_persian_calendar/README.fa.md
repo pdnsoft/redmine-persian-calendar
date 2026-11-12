@@ -4,6 +4,12 @@
 
 [English version](README.md)
 
+## نمایه
+
+![نمایش امکانات](docs/demo-preview.gif)
+
+پیش‌نمایش GIF (بی‌صدا). [تماشای ویدیوی کامل با صدا](docs/demo.mp4).
+
 ## پیش‌نیازها
 
 - Redmine نسخه 6.x یا 7.x (تست‌شده روی 7.0.1)
