@@ -1350,7 +1350,7 @@ fa:
   text_project_closed: این پروژه بسته و فقط‌خواندنی است.
   text_turning_multiple_off: "اگر این گزینه را غیرفعال کنید، در بخش‌های سفارشیِ ذخیره‌شده، فقط یک مقدار باقی خواهد ماند و بقیه موارد حذف خواهند شد."
   text_select_apply_tracker: "انتخاب نوع پیامد"
-  text_select_apply_issue_status: "وضعیت مسئله را انتخاب کنید"
+  text_select_apply_issue_status: "وضعیت پیامد را انتخاب کنید"
   text_avatar_server_config_html: خادم فعلی آواتار <a href="%{url}">%{url}</a> می‌باشد. شما می‌توانید آن را در config/configuration.yml تغییر دهید.
   text_no_subject: بدون موضوع
   text_allowed_queries_to_select: تنها جستارهای عمومی (برای همه کاربران) قابل انتخاب است

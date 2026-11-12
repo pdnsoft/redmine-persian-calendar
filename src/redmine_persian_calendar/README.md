@@ -133,6 +133,24 @@ REDMINE_DIR=/var/www/redmine ./install.sh install
   installer can force Persian for every visitor (logged-in and anonymous);
   toggle it in Administration → Settings → Display → Language.
 
+## Persian wording
+
+The bundled `fa` locale is based on the official Redmine Persian translation,
+with terminology changed to fit PDNSoft's wording. Examples:
+
+| Official Redmine | This plugin |
+|---|---|
+| issue = مسئله | **پیامد** |
+| issues = مسئله‌ها | **پیامدها** |
+| issue status = وضعیت مسئله | **وضعیت پیامد** |
+| tracker = نوع مسئله | **نوع پیامد** |
+| subtask = زیرمسئله | **زیرپیامد** |
+| activity = خط زمان | **گزارش عملکرد** |
+| overview = دورنما | **در یک نگاه** |
+
+Derived strings (issue categories, related issues, reminders, permissions, …)
+follow the same terms. The rest of the translation is unchanged.
+
 ## Uninstall
 
 Uninstall both, or one feature at a time:
