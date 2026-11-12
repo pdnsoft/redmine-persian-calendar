@@ -8,7 +8,7 @@ Jalali (Persian) calendar, date picker and Persian theme for Redmine 6/7.
 
 ![Feature demo](docs/demo-preview.gif)
 
-GIF preview (silent). [Watch the full video with sound](docs/demo.mp4).
+GIF preview (silent). [Watch the full video](docs/demo.mp4).
 
 ## Requirements
 
